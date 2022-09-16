@@ -1,13 +1,5 @@
 ﻿namespace TNTExpressConnectRequest
 {
-    using RestSharp;
-    using RestSharp.Authenticators;
-    using System;
-    using System.Net.Http;
-    using System.Threading.Tasks;
-    using System.Xml.Linq;
-    using System.Xml.Schema;
-
     public class ExpressLabelRequest : ExpressConnectRequest
     {
         private string url = "https://express.tnt.com/expresslabel/documentation/getlabel";

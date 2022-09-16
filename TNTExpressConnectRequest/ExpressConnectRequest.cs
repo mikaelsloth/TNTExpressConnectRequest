@@ -14,8 +14,6 @@
     {
         protected static RestClient GetHttpClient { get; } = new();
 
-        protected virtual bool UseBasicAuth { get; } = true;
-
         /// <summary>
         /// Get or set the login name to be used for the request
         /// </summary>
@@ -157,6 +155,13 @@
             }
         }
 
+        /// <summary>
+        /// Validates the input against a schema
+        /// </summary>
+        /// <param name="inputxml">An <see cref="XDocument"/> representing the request</param>
+        /// <param name="schemas">The <see cref="XmlSchemaSet"/> to validate against</param>
+        /// <param name="message">An <see langword="out"/> parameter containing any messages returned from the validation</param>
+        /// <returns><see langword="true"/> if validate is successful, otherwise <see langword="false"/></returns>
         protected static bool TryValidateSchema(XDocument inputxml, XmlSchemaSet schemas, out string message)
         {
             bool errors = false;
@@ -181,6 +186,11 @@
             return errors;
         }
 
+        /// <summary>
+        /// Submits an async request to the webservice
+        /// </summary>
+        /// <param name="requestXmlAsString">The XML request body as <see cref="string"/></param>
+        /// <returns>A <see cref="Task"/> object where the result is the response from the service formatted as an <see cref="XDocument"/></returns>
         protected virtual async Task<XDocument> SubmitRequestAsyncImpl(string requestXmlAsString)
         {
             try
@@ -197,7 +207,12 @@
             }
         }
 
-        protected static XDocument ParseToXDoc(RestResponse response)
+        /// <summary>
+        /// Formats the response string to an <see cref="XDocument"/>
+        /// </summary>
+        /// <param name="response">The response from the webservice</param>
+        /// <returns>An <see cref="XDocument"/> containing the reponse</returns>
+        protected virtual XDocument ParseToXDoc(RestResponse response)
         {
             string value = response.Content;
             try
@@ -211,6 +226,12 @@
             }
         }
 
+        /// <summary>
+        /// Creates the request for the webservice
+        /// </summary>
+        /// <param name="requestXmlAsString">The XML request body as <see cref="string"/></param>
+        /// <param name="client">The <see cref="RestClient"/> object to use to create the request</param>
+        /// <returns>A <see cref="RestRequest"/> object</returns>
         protected virtual RestRequest SetupConnectionParameters(string requestXmlAsString, RestClient client)
         {
             RestRequest request = new() { Resource = URL };
@@ -222,6 +243,11 @@
             return request;
         }
 
+        /// <summary>
+        /// Submits a request to the webservice
+        /// </summary>
+        /// <param name="requestXmlAsString">The XML request body as <see cref="string"/></param>
+        /// <returns>The response from the service formatted as an <see cref="XDocument"</returns>
         protected virtual XDocument SubmitRequestImpl(string requestXmlAsString)
         {
             try
