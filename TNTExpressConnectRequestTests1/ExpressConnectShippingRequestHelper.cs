@@ -1,0 +1,415 @@
+﻿namespace TNTExpressConnectRequest.Tests
+{
+    using System;
+    using System.Xml;
+    using System.Xml.Linq;
+    using System.Xml.Schema;
+
+    internal static class ExpressConnectShippingRequestHelper
+    {
+        static ExpressConnectShippingRequestHelper()
+        {
+            string tempmsg = string.Empty;
+
+            XmlSchema? myschema = XmlSchema.Read(XmlReader.Create("ShipmentRequest.xsd"), (o, e) =>
+            {
+                tempmsg = "The following messages came from reading the schema: \r\n";
+                if (e.Severity == XmlSeverityType.Warning)
+                    tempmsg = tempmsg + "\r\n" + "WARNING: " + e.Message;
+                else if (e.Severity == XmlSeverityType.Error)
+                    tempmsg = tempmsg + "\r\n" + "ERROR: " + e.Message;
+            });
+
+            if (myschema == null)
+            {
+                throw new XmlException($"The XML schema could not be read. The following errors were encountered:\r\n{ tempmsg }");
+            }
+
+            try
+            {
+                XmlSchemaSet schemas = new();
+                schemas.XmlResolver = new XmlUrlResolver();
+                _ = schemas.Add(myschema);
+                FakeRequestSchema = schemas;
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        public static string FakeSuccessfullRequest(string user, string password, string account)
+        {
+            return "<? xml version =\"1.0\" encoding=\"UTF-8\"?>\r\n" +
+            "<ESHIPPER>\r\n" +
+            "	<LOGIN>\r\n" +
+            "		<COMPANY>" + user + "</COMPANY>\r\n" +
+            "		<PASSWORD>" + password + "</PASSWORD>\r\n" +
+            "		<APPID>EC</APPID>\r\n" +
+            "		<APPVERSION>3.1</APPVERSION>\r\n" +
+            "	</LOGIN>\r\n" +
+            "	<CONSIGNMENTBATCH>\r\n" +
+            "		<SENDER>\r\n" +
+            "			<COMPANYNAME><![CDATA[Sender TEST DO NOT COLLECT Company]]></COMPANYNAME>\r\n" +
+            "			<STREETADDRESS1><![CDATA[TNT Express]]></STREETADDRESS1>\r\n" +
+            "			<STREETADDRESS2><![CDATA[TNT House]]></STREETADDRESS2>\r\n" +
+            "			<STREETADDRESS3><![CDATA[Holly Lane]]></STREETADDRESS3>\r\n" +
+            "			<CITY><![CDATA[Kolding]]></CITY>\r\n" +
+            "			<PROVINCE><![CDATA[]]></PROVINCE>\r\n" +
+            "			<POSTCODE><![CDATA[6000]]></POSTCODE>\r\n" +
+            "			<COUNTRY><![CDATA[DK]]></COUNTRY>\r\n" +
+            "			<ACCOUNT><![CDATA[" + account + "]]></ACCOUNT>\r\n" +
+            "			<VAT><![CDATA[SE12345678]]></VAT>\r\n" +
+            "			<CONTACTNAME><![CDATA[Mr Contact]]></CONTACTNAME>\r\n" +
+            "			<CONTACTDIALCODE><![CDATA[01827]]></CONTACTDIALCODE>\r\n" +
+            "			<CONTACTTELEPHONE><![CDATA[717733]]></CONTACTTELEPHONE>\r\n" +
+            "			<CONTACTEMAIL><![CDATA[contact@tnt.com]]></CONTACTEMAIL>\r\n" +
+            "			<COLLECTION>\r\n" +
+            "				<SHIPDATE><![CDATA[" + DateTime.Today.ToString("MM/dd/yyyy") + "]]></SHIPDATE>\r\n" +
+            "				<PREFCOLLECTTIME>\r\n" +
+            "					<FROM><![CDATA[09:00]]></FROM>\r\n" +
+            "					<TO><![CDATA[16:00]]></TO>\r\n" +
+            "				</PREFCOLLECTTIME>\r\n" +
+            "				<COLLINSTRUCTIONS />\r\n" +
+            "			</COLLECTION>\r\n" +
+            "		</SENDER>\r\n" +
+            "		<CONSIGNMENT>\r\n" +
+            "			<CONREF> TESTREF1</CONREF>\r\n" +
+            "			<DETAILS>\r\n" +
+            "				<RECEIVER>\r\n" +
+            "					<COMPANYNAME><![CDATA[Receiver Company Name]]></COMPANYNAME>\r\n" +
+            "					<STREETADDRESS1><![CDATA[TEST DO NOT COLLECT]]></STREETADDRESS1>\r\n" +
+            "					<STREETADDRESS2><![CDATA[TEST DO NOT COLLECT]]></STREETADDRESS2>\r\n" +
+            "					<STREETADDRESS3><![CDATA[TEST DO NOT COLLECT]]></STREETADDRESS3>\r\n" +
+            "					<CITY><![CDATA[Hoofddorp]]></CITY>\r\n" +
+            "					<PROVINCE />\r\n" +
+            "					<POSTCODE><![CDATA[2132 LS]]></POSTCODE>\r\n" +
+            "					<COUNTRY><![CDATA[NL]]></COUNTRY>\r\n" +
+            "					<VAT />\r\n" +
+            "					<CONTACTNAME><![CDATA[Mr Contact]]></CONTACTNAME>\r\n" +
+            "					<CONTACTDIALCODE><![CDATA[01827]]></CONTACTDIALCODE>\r\n" +
+            "					<CONTACTTELEPHONE><![CDATA[717733]]></CONTACTTELEPHONE>\r\n" +
+            "					<CONTACTEMAIL><![CDATA[contact@tnt.com]]></CONTACTEMAIL>\r\n" +
+            "				</RECEIVER>\r\n" +
+            "				<CUSTOMERREF><![CDATA[Customer shipping ref]]></CUSTOMERREF>\r\n" +
+            "				<CONTYPE><![CDATA[N]]></CONTYPE>\r\n" +
+            "				<PAYMENTIND><![CDATA[S]]></PAYMENTIND>\r\n" +
+            "				<ITEMS><![CDATA[3]]></ITEMS>\r\n" +
+            "				<TOTALWEIGHT><![CDATA[1.8]]></TOTALWEIGHT>\r\n" +
+            "				<TOTALVOLUME><![CDATA[0.027]]></TOTALVOLUME>\r\n" +
+            "				<CURRENCY><![CDATA[EUR]]></CURRENCY>\r\n" +
+            "				<GOODSVALUE><![CDATA[180.00]]></GOODSVALUE>\r\n" +
+            "				<INSURANCEVALUE><![CDATA[]]></INSURANCEVALUE>\r\n" +
+            "				<INSURANCECURRENCY><![CDATA[]]></INSURANCECURRENCY>\r\n" +
+            "				<DIVISION><![CDATA[G]]></DIVISION>\r\n" +
+            "				<SERVICE><![CDATA[15N]]></SERVICE>\r\n" +
+            "				<OPTION><![CDATA[]]></OPTION>\r\n" +
+            "				<DESCRIPTION><![CDATA[assorted office accessories]]></DESCRIPTION>\r\n" +
+            "				<DELIVERYINST><![CDATA[Please pass to reception window - 3rd on the left]]></DELIVERYINST>\r\n" +
+            "				<HAZARDOUS><![CDATA[N]]></HAZARDOUS>\r\n" +
+            "				<UNNUMBER />\r\n" +
+            "				<PACKINGGROUP />\r\n" +
+            "				<PACKAGE>\r\n" +
+            "					<ITEMS><![CDATA[1]]></ITEMS>\r\n" +
+            "					<DESCRIPTION><![CDATA[box 1]]></DESCRIPTION>\r\n" +
+            "					<LENGTH><![CDATA[0.1]]></LENGTH>\r\n" +
+            "					<HEIGHT><![CDATA[0.2]]></HEIGHT>\r\n" +
+            "					<WIDTH><![CDATA[0.3]]></WIDTH>\r\n" +
+            "					<WEIGHT><![CDATA[0.6]]></WEIGHT>\r\n" +
+            "				</PACKAGE>\r\n" +
+            "				<PACKAGE>\r\n" +
+            "					<ITEMS><![CDATA[1]]></ITEMS>\r\n" +
+            "					<DESCRIPTION><![CDATA[box 2]]></DESCRIPTION>\r\n" +
+            "					<LENGTH><![CDATA[0.2]]></LENGTH>\r\n" +
+            "					<HEIGHT><![CDATA[0.2]]></HEIGHT>\r\n" +
+            "					<WIDTH><![CDATA[0.3]]></WIDTH>\r\n" +
+            "					<WEIGHT><![CDATA[0.6]]></WEIGHT>\r\n" +
+            "				</PACKAGE>\r\n" +
+            "				<PACKAGE>\r\n" +
+            "					<ITEMS><![CDATA[1]]></ITEMS>\r\n" +
+            "					<DESCRIPTION><![CDATA[box 3]]></DESCRIPTION>\r\n" +
+            "					<LENGTH><![CDATA[0.1]]></LENGTH>\r\n" +
+            "					<HEIGHT><![CDATA[0.3]]></HEIGHT>\r\n" +
+            "					<WIDTH><![CDATA[0.3]]></WIDTH>\r\n" +
+            "					<WEIGHT><![CDATA[0.6]]></WEIGHT>\r\n" +
+            "				</PACKAGE>\r\n" +
+            "			</DETAILS>\r\n" +
+            "		</CONSIGNMENT>\r\n" +
+            "	</CONSIGNMENTBATCH>\r\n" +
+            "	<ACTIVITY>\r\n" +
+            "		<CREATE>\r\n" +
+            "			<CONREF><![CDATA[TESTREF1]]></CONREF>\r\n" +
+            "		</CREATE>\r\n" +
+            "		<SHIP>\r\n" +
+            "			<CONREF><![CDATA[TESTREF1]]></CONREF>\r\n" +
+            "		</SHIP>\r\n" +
+            "		<PRINT>\r\n" +
+            "			<CONNOTE>\r\n" +
+            "				<CONREF><![CDATA[TESTREF1]]></CONREF>\r\n" +
+            "			</CONNOTE>\r\n" +
+            "			<MANIFEST>\r\n" +
+            "				<CONREF><![CDATA[TESTREF1]]></CONREF>\r\n" +
+            "			</MANIFEST>\r\n" +
+            "			<INVOICE>\r\n" +
+            "				<CONREF><![CDATA[TESTREF1]]></CONREF>\r\n" +
+            "			</INVOICE>\r\n" +
+            "		</PRINT>\r\n" +
+            "	</ACTIVITY>\r\n" +
+            "</ESHIPPER>";
+        }
+
+        public static string FakeErrorRequest(string user, string password, string account)
+        {
+            return "<? xml version =\"1.0\" encoding=\"UTF-8\"?>\r\n" +
+            "<ESHIPPER>\r\n" +
+            "	<LOGIN>\r\n" +
+            "		<COMPANY>" + user + "</COMPANY>\r\n" +
+            "		<PASSWORD>" + password + "</PASSWORD>\r\n" +
+            "		<APPID>EC</APPID>\r\n" +
+            "		<APPVERSION>3.1</APPVERSION>\r\n" +
+            "	</LOGIN>\r\n" +
+            "	<CONSIGNMENTBATCH>\r\n" +
+            "		<SENDER>\r\n" +
+            "			<COMPANYNAME><![CDATA[Sender TEST DO NOT COLLECT Company]]></COMPANYNAME>\r\n" +
+            "			<STREETADDRESS1><![CDATA[TNT Express]]></STREETADDRESS1>\r\n" +
+            "			<STREETADDRESS2><![CDATA[TNT House]]></STREETADDRESS2>\r\n" +
+            "			<STREETADDRESS3><![CDATA[Holly Lane]]></STREETADDRESS3>\r\n" +
+            "			<CITY><![CDATA[Kolding]]></CITY>\r\n" +
+            "			<PROVINCE><![CDATA[]]></PROVINCE>\r\n" +
+            "			<POSTCODE><![CDATA[6000]]></POSTCODE>\r\n" +
+            "			<COUNTRY><![CDATA[DK]]></COUNTRY>\r\n" +
+            "			<ACCOUNT><![CDATA[" + account + "]]></ACCOUNT>\r\n" +
+            "			<VAT><![CDATA[SE12345678]]></VAT>\r\n" +
+            "			<CONTACTNAME><![CDATA[Mr Contact]]></CONTACTNAME>\r\n" +
+            "			<CONTACTDIALCODE><![CDATA[01827]]></CONTACTDIALCODE>\r\n" +
+            "			<CONTACTTELEPHONE><![CDATA[717733]]></CONTACTTELEPHONE>\r\n" +
+            "			<CONTACTEMAIL><![CDATA[contact@tnt.com]]></CONTACTEMAIL>\r\n" +
+            "			<COLLECTION>\r\n" +
+            "				<SHIPDATE><![CDATA[" + DateTime.Today.ToString("MM/dd/yyyy") + "]]></SHIPDATE>\r\n" +
+            "				<PREFCOLLECTTIME>\r\n" +
+            "					<FROM><![CDATA[09:00]]></FROM>\r\n" +
+            "					<TO><![CDATA[16:00]]></TO>\r\n" +
+            "				</PREFCOLLECTTIME>\r\n" +
+            "				<COLLINSTRUCTIONS />\r\n" +
+            "			</COLLECTION>\r\n" +
+            "		</SENDER>\r\n" +
+            "		<CONSIGNMENT>\r\n" +
+            "			<CONREF> TESTREF1</CONREF>\r\n" +
+            "			<DETAILS>\r\n" +
+            "				<RECEIVER>\r\n" +
+            "					<COMPANYNAME><![CDATA[Receiver Company Name]]></COMPANYNAME>\r\n" +
+            "					<STREETADDRESS1><![CDATA[TEST DO NOT COLLECT]]></STREETADDRESS1>\r\n" +
+            "					<STREETADDRESS2><![CDATA[TEST DO NOT COLLECT]]></STREETADDRESS2>\r\n" +
+            "					<STREETADDRESS3><![CDATA[TEST DO NOT COLLECT]]></STREETADDRESS3>\r\n" +
+            "					<CITY><![CDATA[Hoofddorp]]></CITY>\r\n" +
+            "					<PROVINCE />\r\n" +
+            "					<POSTCODE><![CDATA[2132 LS]]></POSTCODE>\r\n" +
+            "					<COUNTRY><![CDATA[NL]]></COUNTRY>\r\n" +
+            "					<VAT />\r\n" +
+            "					<CONTACTNAME><![CDATA[Mr Contact]]></CONTACTNAME>\r\n" +
+            "					<CONTACTDIALCODE><![CDATA[01827]]></CONTACTDIALCODE>\r\n" +
+            "					<CONTACTTELEPHONE><![CDATA[717733]]></CONTACTTELEPHONE>\r\n" +
+            "					<CONTACTEMAIL><![CDATA[contact@tnt.com]]></CONTACTEMAIL>\r\n" +
+            "				</RECEIVER>\r\n" +
+            "				<CUSTOMERREF><![CDATA[Customer shipping ref]]></CUSTOMERREF>\r\n" +
+            "				<CONTYPE><![CDATA[N]]></CONTYPE>\r\n" +
+            "				<PAYMENTIND><![CDATA[S]]></PAYMENTIND>\r\n" +
+            "				<ITEMS><![CDATA[3]]></ITEMS>\r\n" +
+            "				<TOTALWEIGHT><![CDATA[1.8]]></TOTALWEIGHT>\r\n" +
+            "				<TOTALVOLUME><![CDATA[0.027]]></TOTALVOLUME>\r\n" +
+            "				<CURRENCY><![CDATA[EUR]]></CURRENCY>\r\n" +
+            "				<GOODSVALUE><![CDATA[180.00]]></GOODSVALUE>\r\n" +
+            "				<INSURANCEVALUE><![CDATA[]]></INSURANCEVALUE>\r\n" +
+            "				<INSURANCECURRENCY><![CDATA[]]></INSURANCECURRENCY>\r\n" +
+            "				<DIVISION><![CDATA[G]]></DIVISION>\r\n" +
+            "				<SERVICE><![CDATA[15N]]></SERVICE>\r\n" +
+            "				<OPTION><![CDATA[]]></OPTION>\r\n" +
+            "				<DESCRIPTION><![CDATA[assorted office accessories]]></DESCRIPTION>\r\n" +
+            "				<DELIVERYINST><![CDATA[Please pass to reception window - 3rd on the left]]></DELIVERYINST>\r\n" +
+            "				<HAZARDOUS><![CDATA[N]]></HAZARDOUS>\r\n" +
+            "				<UNNUMBER />\r\n" +
+            "				<PACKINGGROUP />\r\n" +
+            "				<PACKAGE>\r\n" +
+            "					<ITEMS><![CDATA[1]]></ITEMS>\r\n" +
+            "					<DESCRIPTION><![CDATA[box 1]]></DESCRIPTION>\r\n" +
+            "					<LENGTH><![CDATA[0.1]]></LENGTH>\r\n" +
+            "					<HEIGHT><![CDATA[0.2]]></HEIGHT>\r\n" +
+            "					<WIDTH><![CDATA[0.3]]></WIDTH>\r\n" +
+            "					<WEIGHT><![CDATA[0.6]]></WEIGHT>\r\n" +
+            "				</PACKAGE>\r\n" +
+            "				<PACKAGE>\r\n" +
+            "					<ITEMS><![CDATA[1]]></ITEMS>\r\n" +
+            "					<DESCRIPTION><![CDATA[box 2]]></DESCRIPTION>\r\n" +
+            "					<LENGTH><![CDATA[0.2]]></LENGTH>\r\n" +
+            "					<HEIGHT><![CDATA[0.2]]></HEIGHT>\r\n" +
+            "					<WIDTH><![CDATA[0.3]]></WIDTH>\r\n" +
+            "					<WEIGHT><![CDATA[0.6]]></WEIGHT>\r\n" +
+            "				</PACKAGE>\r\n" +
+            "				<PACKAGE>\r\n" +
+            "					<ITEMS><![CDATA[1]]></ITEMS>\r\n" +
+            "					<DESCRIPTION><![CDATA[box 3]]></DESCRIPTION>\r\n" +
+            "					<LENGTH><![CDATA[0.1]]></LENGTH>\r\n" +
+            "					<HEIGHT><![CDATA[0.3]]></HEIGHT>\r\n" +
+            "					<WIDTH><![CDATA[0.3]]></WIDTH>\r\n" +
+            "					<WEIGHT><![CDATA[0.6]]></WEIGHT>\r\n" +
+            "				</PACKAGE>\r\n" +
+            "			</DETAILS>\r\n" +
+            "		</CONSIGNMENT>\r\n" +
+            "	</CONSIGNMENTBATCH>\r\n" +
+            "	<ACTIVITY>\r\n" +
+            "		<CREATE>\r\n" +
+            "			<CONREF><![CDATA[TESTREF1]]></CONREF>\r\n" +
+            "		</CREATE>\r\n" +
+            "		<SHIP>\r\n" +
+            "			<CONREF><![CDATA[TESTREF1]]></CONREF>\r\n" +
+            "		</SHIP>\r\n" +
+            "		<PRINT>\r\n" +
+            "			<CONNOTE>\r\n" +
+            "				<CONREF><![CDATA[TESTREF1]]></CONREF>\r\n" +
+            "			</CONNOTE>\r\n" +
+            "			<MANIFEST>\r\n" +
+            "				<CONREF><![CDATA[TESTREF1]]></CONREF>\r\n" +
+            "			</MANIFEST>\r\n" +
+            "			<INVOICE>\r\n" +
+            "				<CONREF><![CDATA[TESTREF1]]></CONREF>\r\n" +
+            "			</INVOICE>\r\n" +
+            "		</PRINT>\r\n" +
+            "	</ACTIVITY>\r\n" +
+            "</ESHIPPER>";
+        }
+
+        public static string FakeInvalidRequest(string user, string password, string account)
+        {
+            return "<? xml version =\"1.0\" encoding=\"UTF-8\"?>\r\n" +
+            "<ESHIPPER>\r\n" +
+            "	<LOGIN>\r\n" +
+            "		<COMPANY>" + user + "</COMPANY>\r\n" +
+            "		<PASSWORD>" + password + "</PASSWORD>\r\n" +
+            "		<APPID>EC</APPID>\r\n" +
+            "		<APPVERSION>3.1</APPVERSION>\r\n" +
+            "	</LOGIN>\r\n" +
+            "	<CONSIGNMENTBATCH>\r\n" +
+            "		<SENDER>\r\n" +
+            "			<COMPANYNAME><![CDATA[Sender TEST DO NOT COLLECT Company]]></COMPANYNAME>\r\n" +
+            "			<STREETADDRESS1><![CDATA[TNT Express]]></STREETADDRESS1>\r\n" +
+            "			<STREETADDRESS2><![CDATA[TNT House]]></STREETADDRESS2>\r\n" +
+            "			<STREETADDRESS3><![CDATA[Holly Lane]]></STREETADDRESS3>\r\n" +
+            "			<CITY><![CDATA[Kolding]]></CITY>\r\n" +
+            "			<PROVINCE><![CDATA[]]></PROVINCE>\r\n" +
+            "			<POSTCODE><![CDATA[6000]]></POSTCODE>\r\n" +
+            "			<COUNTRY><![CDATA[DK]]></COUNTRY>\r\n" +
+            "			<ACCOUNT><![CDATA[" + account + "]]></ACCOUNT>\r\n" +
+            "			<VAT><![CDATA[SE12345678]]></VAT>\r\n" +
+            "			<CONTACTNAME><![CDATA[Mr Contact]]></CONTACTNAME>\r\n" +
+            "			<CONTACTDIALCODE><![CDATA[01827]]></CONTACTDIALCODE>\r\n" +
+            "			<CONTACTTELEPHONE><![CDATA[717733]]></CONTACTTELEPHONE>\r\n" +
+            "			<CONTACTEMAIL><![CDATA[contact@tnt.com]]></CONTACTEMAIL>\r\n" +
+            "			<COLLECTION>\r\n" +
+            "				<SHIPDATE><![CDATA[" + DateTime.Today.ToString("MM/dd/yyyy") + "]]></SHIPDATE>\r\n" +
+            "				<PREFCOLLECTTIME>\r\n" +
+            "					<FROM><![CDATA[09:00]]></FROM>\r\n" +
+            "					<TO><![CDATA[16:00]]></TO>\r\n" +
+            "				</PREFCOLLECTTIME>\r\n" +
+            "				<COLLINSTRUCTIONS />\r\n" +
+            "			</COLLECTION>\r\n" +
+            "		</SENDER>\r\n" +
+            "		<CONSIGNMENT>\r\n" +
+            "			<CONREF> TESTREF1</CONREF>\r\n" +
+            "			<DETAILS>\r\n" +
+            "				<RECEIVER>\r\n" +
+            "					<COMPANYNAME><![CDATA[Receiver Company Name]]></COMPANYNAME>\r\n" +
+            "					<STREETADDRESS1><![CDATA[TEST DO NOT COLLECT]]></STREETADDRESS1>\r\n" +
+            "					<STREETADDRESS2><![CDATA[TEST DO NOT COLLECT]]></STREETADDRESS2>\r\n" +
+            "					<STREETADDRESS3><![CDATA[TEST DO NOT COLLECT]]></STREETADDRESS3>\r\n" +
+            "					<CITY><![CDATA[Hoofddorp]]></CITY>\r\n" +
+            "					<PROVINCE />\r\n" +
+            "					<POSTCODE><![CDATA[2132 LS]]></POSTCODE>\r\n" +
+            "					<COUNTRY><![CDATA[NL]]></COUNTRY>\r\n" +
+            "					<VAT />\r\n" +
+            "					<CONTACTNAME><![CDATA[Mr Contact]]></CONTACTNAME>\r\n" +
+            "					<CONTACTDIALCODE><![CDATA[01827]]></CONTACTDIALCODE>\r\n" +
+            "					<CONTACTTELEPHONE><![CDATA[717733]]></CONTACTTELEPHONE>\r\n" +
+            "					<CONTACTEMAIL><![CDATA[contact@tnt.com]]></CONTACTEMAIL>\r\n" +
+            "				</RECEIVER>\r\n" +
+            "				<CUSTOMERREF><![CDATA[Customer shipping ref]]></CUSTOMERREF>\r\n" +
+            "				<CONTYPE><![CDATA[N]]></CONTYPE>\r\n" +
+            "				<PAYMENTIND><![CDATA[S]]></PAYMENTIND>\r\n" +
+            "				<ITEMS><![CDATA[3]]></ITEMS>\r\n" +
+            "				<TOTALWEIGHT><![CDATA[1.8]]></TOTALWEIGHT>\r\n" +
+            "				<TOTALVOLUME><![CDATA[0.027]]></TOTALVOLUME>\r\n" +
+            "				<CURRENCY><![CDATA[EUR]]></CURRENCY>\r\n" +
+            "				<GOODSVALUE><![CDATA[180.00]]></GOODSVALUE>\r\n" +
+            "				<INSURANCEVALUE><![CDATA[]]></INSURANCEVALUE>\r\n" +
+            "				<INSURANCECURRENCY><![CDATA[]]></INSURANCECURRENCY>\r\n" +
+            "				<DIVISION><![CDATA[G]]></DIVISION>\r\n" +
+            "				<OPTION><![CDATA[]]></OPTION>\r\n" +
+            "				<DESCRIPTION><![CDATA[assorted office accessories]]></DESCRIPTION>\r\n" +
+            "				<DELIVERYINST><![CDATA[Please pass to reception window - 3rd on the left]]></DELIVERYINST>\r\n" +
+            "				<HAZARDOUS><![CDATA[N]]></HAZARDOUS>\r\n" +
+            "				<UNNUMBER />\r\n" +
+            "				<SERVICE><![CDATA[15N]]></SERVICE>\r\n" +
+            "				<PACKINGGROUP />\r\n" +
+            "				<PACKAGE>\r\n" +
+            "					<ITEMS><![CDATA[1]]></ITEMS>\r\n" +
+            "					<DESCRIPTION><![CDATA[box 1]]></DESCRIPTION>\r\n" +
+            "					<LENGTH><![CDATA[0.1]]></LENGTH>\r\n" +
+            "					<HEIGHT><![CDATA[0.2]]></HEIGHT>\r\n" +
+            "					<WIDTH><![CDATA[0.3]]></WIDTH>\r\n" +
+            "					<WEIGHT><![CDATA[0.6]]></WEIGHT>\r\n" +
+            "				</PACKAGE>\r\n" +
+            "				<PACKAGE>\r\n" +
+            "					<ITEMS><![CDATA[1]]></ITEMS>\r\n" +
+            "					<DESCRIPTION><![CDATA[box 2]]></DESCRIPTION>\r\n" +
+            "					<LENGTH><![CDATA[0.2]]></LENGTH>\r\n" +
+            "					<HEIGHT><![CDATA[0.2]]></HEIGHT>\r\n" +
+            "					<WIDTH><![CDATA[0.3]]></WIDTH>\r\n" +
+            "					<WEIGHT><![CDATA[0.6]]></WEIGHT>\r\n" +
+            "				</PACKAGE>\r\n" +
+            "				<PACKAGE>\r\n" +
+            "					<ITEMS><![CDATA[1]]></ITEMS>\r\n" +
+            "					<DESCRIPTION><![CDATA[box 3]]></DESCRIPTION>\r\n" +
+            "					<LENGTH><![CDATA[0.1]]></LENGTH>\r\n" +
+            "					<HEIGHT><![CDATA[0.3]]></HEIGHT>\r\n" +
+            "					<WIDTH><![CDATA[0.3]]></WIDTH>\r\n" +
+            "					<WEIGHT><![CDATA[0.6]]></WEIGHT>\r\n" +
+            "				</PACKAGE>\r\n" +
+            "			</DETAILS>\r\n" +
+            "		</CONSIGNMENT>\r\n" +
+            "	</CONSIGNMENTBATCH>\r\n" +
+            "	<ACTIVITY>\r\n" +
+            "		<CREATE>\r\n" +
+            "			<CONREF><![CDATA[TESTREF1]]></CONREF>\r\n" +
+            "		</CREATE>\r\n" +
+            "		<SHIP>\r\n" +
+            "			<CONREF><![CDATA[TESTREF1]]></CONREF>\r\n" +
+            "		</SHIP>\r\n" +
+            "		<PRINT>\r\n" +
+            "			<CONNOTE>\r\n" +
+            "				<CONREF><![CDATA[TESTREF1]]></CONREF>\r\n" +
+            "			</CONNOTE>\r\n" +
+            "			<MANIFEST>\r\n" +
+            "				<CONREF><![CDATA[TESTREF1]]></CONREF>\r\n" +
+            "			</MANIFEST>\r\n" +
+            "			<INVOICE>\r\n" +
+            "				<CONREF><![CDATA[TESTREF1]]></CONREF>\r\n" +
+            "			</INVOICE>\r\n" +
+            "		</PRINT>\r\n" +
+            "	</ACTIVITY>\r\n" +
+            "</ESHIPPER>";
+        }
+
+        public static XmlSchemaSet FakeRequestSchema { get; private set; }
+
+        public static XDocument ConvertStringToXDocument(string requestXmlAsString)
+        {
+            try
+            {
+                return XDocument.Parse(requestXmlAsString, LoadOptions.PreserveWhitespace | LoadOptions.SetLineInfo);
+            }
+            catch
+            {
+                throw;
+            }
+        }
+    }
+}

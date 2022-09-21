@@ -17,7 +17,7 @@
         /// <summary>
         /// Get or set the login name to be used for the request
         /// </summary>
-        public virtual string CustomerId
+        public virtual string? CustomerId
         {
             get;
             set;
@@ -26,7 +26,7 @@
         /// <summary>
         /// Set the password to be used for the request
         /// </summary>
-        public virtual string Password
+        public virtual string? Password
         {
             protected get;
             set;
@@ -214,7 +214,8 @@
         /// <returns>An <see cref="XDocument"/> containing the reponse</returns>
         protected virtual XDocument ParseToXDoc(RestResponse response)
         {
-            string value = response.Content;
+            // Implement throw on null when going to .NET6
+            string? value = response.Content;
             try
             {
                 XDocument doc = XDocument.Parse(value, LoadOptions.PreserveWhitespace | LoadOptions.SetLineInfo);
@@ -234,6 +235,7 @@
         /// <returns>A <see cref="RestRequest"/> object</returns>
         protected virtual RestRequest SetupConnectionParameters(string requestXmlAsString, RestClient client)
         {
+            // Implement throw on null when going to .NET6
             RestRequest request = new() { Resource = URL };
             _ = request.AddHeader("Content-Type", ContentType);
             _ = request.AddHeader("Accept", "*/*");

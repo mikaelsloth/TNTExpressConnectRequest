@@ -89,7 +89,8 @@
         /// <inheritdoc cref="ExpressConnectRequest.ParseToXDoc(RestResponse)(string, RestClient)"/>
         protected override XDocument ParseToXDoc(RestResponse response)
         {
-            string value = response.Content;
+            // Implement throw on null when going to .NET6
+            string? value = response.Content;
             if (!value.Contains("COMPLETE")) throw new Exception("The shipping endpoint must return a COMPLETE message containing an access key");
             string accesskey = value[9..];
 
