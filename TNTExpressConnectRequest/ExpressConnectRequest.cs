@@ -214,8 +214,8 @@
         /// <returns>An <see cref="XDocument"/> containing the reponse</returns>
         protected virtual XDocument ParseToXDoc(RestResponse response)
         {
-            // Implement throw on null when going to .NET6
-            string? value = response.Content;
+            ArgumentNullException.ThrowIfNull(response.Content);
+            string value = response.Content;
             try
             {
                 XDocument doc = XDocument.Parse(value, LoadOptions.PreserveWhitespace | LoadOptions.SetLineInfo);
@@ -236,6 +236,9 @@
         protected virtual RestRequest SetupConnectionParameters(string requestXmlAsString, RestClient client)
         {
             // Implement throw on null when going to .NET6
+            ArgumentNullException.ThrowIfNull(CustomerId);
+            ArgumentNullException.ThrowIfNull(Password);
+
             RestRequest request = new() { Resource = URL };
             _ = request.AddHeader("Content-Type", ContentType);
             _ = request.AddHeader("Accept", "*/*");
