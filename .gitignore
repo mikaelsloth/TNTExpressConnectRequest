@@ -361,3 +361,6 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/TNTExpressConnectRequestTests1/Sensistive.config
+/TNTExpressConnectRequestTests1/Sensitive.config
+/TNTExpressConnectRequestTests/Sensitive.json

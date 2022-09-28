@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.32802.440
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32901.215
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TNTExpressConnectRequest", "TNTExpressConnectRequest\TNTExpressConnectRequest.csproj", "{438CD919-B642-4D39-BC4B-5F73B17A3D7D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TNTExpressConnectRequestTests1", "TNTExpressConnectRequestTests1\TNTExpressConnectRequestTests1.csproj", "{290CB17F-3C0A-4B0C-B5DC-5B311C3B72EB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TNTExpressConnectRequestTests", "TNTExpressConnectRequestTests\TNTExpressConnectRequestTests.csproj", "{290CB17F-3C0A-4B0C-B5DC-5B311C3B72EB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TNTExpressConnectTest", "TNTExpressConnectTest\TNTExpressConnectTest.csproj", "{3DD4D875-2E1B-42CD-A799-7B7803F49708}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{290CB17F-3C0A-4B0C-B5DC-5B311C3B72EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{290CB17F-3C0A-4B0C-B5DC-5B311C3B72EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{290CB17F-3C0A-4B0C-B5DC-5B311C3B72EB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3DD4D875-2E1B-42CD-A799-7B7803F49708}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3DD4D875-2E1B-42CD-A799-7B7803F49708}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3DD4D875-2E1B-42CD-A799-7B7803F49708}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3DD4D875-2E1B-42CD-A799-7B7803F49708}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
