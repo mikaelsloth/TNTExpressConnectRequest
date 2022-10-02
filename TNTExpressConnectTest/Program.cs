@@ -1,20 +1,78 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
+using System.Xml;
 using System.Xml.Linq;
+using System.Xml.Schema;
 using TNTExpressConnectRequest.Tests;
-
-ExpressConnectShippingTests request = new();
-string content = new ExpressConnectShippingTestRequests().FakeInvalidCredentialsRequest();
-
-//string input = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><document><CREATE><CONREF>TESTREF1</CONREF><CONNUMBER>GE986049714DK</CONNUMBER><SUCCESS>Y</SUCCESS></CREATE><TRANSITTIMES><estimatedTimeOfArrival>2022-09-28T18:00:00</estimatedTimeOfArrival><PickupDate>2022-09-27T00:00:00</PickupDate><serviceCallCutOffTimes><callCutOffDateAndTime>2022-09-27T16:45:00</callCutOffDateAndTime><icaStartDateAndTime>2022-09-27T10:00:00</icaStartDateAndTime><icaEndDateAndTime>2022-09-27T18:15:00</icaEndDateAndTime></serviceCallCutOffTimes></TRANSITTIMES><SHIP><CONSIGNMENT><CONREF>TESTREF1</CONREF><CONNUMBER>GE986049714DK</CONNUMBER><SUCCESS>Y</SUCCESS></CONSIGNMENT></SHIP><PRINT><CONNOTE>CREATED</CONNOTE><MANIFEST>CREATED</MANIFEST><INVOICE>CREATED</INVOICE></PRINT></document>";
-//XDocument doc = XDocument.Parse(input);
-//XElement? create = doc.Root?.Element("CREATE");
-//Console.WriteLine(create == null ? "not found" : create.ToString());
 
 try
 {
-    await request.A01_SubmitShippingRequestAsync_XDocument(content, nameof(ExpressConnectShippingTestRequests.FakeInvalidCredentialsRequest));
-    await request.A230_GetResultAsync_InvalidCredentials();
+
+    ExpressConnectShippingTests request = new();
+    Console.WriteLine("All OK");
+    //string content = new ExpressConnectShippingTestRequests().FakeSuccessfullRequest();
+
+    //    await request.A01_SubmitShippingRequestAsync_XDocument(content, nameof(ExpressConnectShippingTestRequests.FakeInvalidCredentialsRequest));
+    //    await request.A230_GetResultAsync_InvalidCredentials();
 }
-catch { Console.WriteLine("errors happened"); }
+catch (Exception ex)
+{ Console.WriteLine("errors happened:" + ex.Message); }
+//var test = new Test();
+
+//test.CreateSchemaSet(new string[] { "LabelRequest.xsd" });
+
+//class Test
+//{
+//    internal string ErrorMessages { get; set; } = string.Empty;
+//    internal bool Errors { get; set; } = false;
+
+//    internal XmlSchemaSet? CreateSchemaSet(string[] schemafiles)
+//    {
+//        string tempmsg = string.Empty;
+//        XmlSchemaSet schemas = new()
+//        {
+//            XmlResolver = new XmlUrlResolver()
+//        };
+
+//        ValidationEventHandler eventhandler = new(XsdValidationCallback);
+
+//        for (int i = 0; i < schemafiles.Length; i++)
+//        {
+//            XmlSchema? myschema = XmlSchema.Read(XmlReader.Create(schemafiles[i]), eventhandler);
+
+//#if DEBUG
+//            if (myschema == null)
+//            {
+//                throw new XmlException($"The XML schema could not be read. The following errors were encountered:\r\n{tempmsg}");
+//            }
+//#endif
+
+//            try
+//            {
+//                _ = schemas.Add(myschema);
+//            }
+//            catch
+//            {
+//                return null;
+//            }
+//        }
+
+//        schemas.Compile();
+//        return schemas;
+//    }
+
+//    void XsdValidationCallback(object? sender, ValidationEventArgs e)
+//    {
+//        ArgumentNullException.ThrowIfNull(e);
+//        ErrorMessages += "The following messages came from reading the schema: \r\n";
+
+//        ErrorMessages += e.Severity switch
+//        {
+//            XmlSeverityType.Warning => "WARNING: " + e.Message,
+//            XmlSeverityType.Error => "ERROR: " + e.Message,
+//            _ => string.Empty
+//        };
+//        ErrorMessages += e.Exception?.Message ?? string.Empty;
+//    }
+//}
 

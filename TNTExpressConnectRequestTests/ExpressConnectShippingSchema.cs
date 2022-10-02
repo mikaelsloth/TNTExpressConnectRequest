@@ -1,17 +1,19 @@
 ﻿namespace TNTExpressConnectRequest.Tests
 {
-    using System;
-
-    internal class ExpressConnectShippingSchema : ExpressConnectSchema
+    internal sealed class ExpressConnectShippingSchema : ExpressConnectSchema
     {
-        private static readonly string[] schemafiles = new string[] { "ShippingCommonDefinitions.xsd", "ShipmentRequest.xsd" };
+        private static readonly string[] schemafiles = new string[] { "ShipmentRequest.xsd" };
+
+        // Explicit static constructor to tell C# compiler
+        // not to mark type as beforefieldinit
+        static ExpressConnectShippingSchema()
+        {
+        }
 
         private ExpressConnectShippingSchema() : base(schemafiles)
         {
         }
 
-        private static readonly Lazy<ExpressConnectShippingSchema> lazy = new(() => new ExpressConnectShippingSchema());
-
-        public static ExpressConnectShippingSchema Instance = lazy.Value;
+        public static ExpressConnectShippingSchema Instance { get; } = new();
     }
 }

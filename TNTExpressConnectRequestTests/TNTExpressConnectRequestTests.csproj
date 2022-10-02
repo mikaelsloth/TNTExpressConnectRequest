@@ -45,6 +45,9 @@
     <None Update="Sensitive.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="ShipmentCommonDefinitions.xsd">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="ShipmentRequest.xsd">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

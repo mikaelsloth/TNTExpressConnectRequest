@@ -12,14 +12,14 @@
 
         public override string FakeDataValidationErrorRequest()
         {
-            return "<?xml version=\"1.0\" encoding=\"UTF - 8\"?>\r\n" +
+            return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n" +
             "<labelRequest>\r\n" +
             "	<consignment key=\"CON1\">\r\n" +
             "		<consignmentIdentity>\r\n" +
             "			<consignmentNumber><![CDATA[123456785]]></consignmentNumber>\r\n" +
             "			<customerReference><![CDATA[CR1234567890CR1234567890]]></customerReference>\r\n" +
             "		</consignmentIdentity>\r\n" +
-            "		<collectionDateTime><![CDATA[" + DateTime.Today.ToString("yyyy/MM/dd") + "T14:00:00]]></collectionDateTime>\r\n" +
+            "		<collectionDateTime><![CDATA[" + GetShippingDate.ToString("yyyy/MM/dd") + "T14:00:00]]></collectionDateTime>\r\n" +
             "		<sender>\r\n" +
             "			<name><![CDATA[----------]]></name>\r\n" +
             "			<addressLine1><![CDATA[----------]]></addressLine1>\r\n" +
@@ -96,14 +96,14 @@
 
         public override string FakeInvalidFormatRequest()
         {
-            return "<?xml version=\"1.0\" encoding=\"UTF - 8\"?>\r\n" +
+            return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n" +
             "<labelRequest>\r\n" +
             "	<consignment key=\"CON1\">\r\n" +
             "		<consignmentIdentity>\r\n" +
             "			<consignmentNumber><![CDATA[123456785]]></consignmentNumber>\r\n" +
             "			<customerReference><![CDATA[CR1234567890CR1234567890]]></customerReference>\r\n" +
             "		</consignmentIdentity>\r\n" +
-            "		<collectionDateTime><![CDATA[" + DateTime.Today.ToString("yyyy/MM/dd") + "]]></collectionDateTime>\r\n" +
+            "		<collectionDateTime><![CDATA[" + GetShippingDate.ToString("yyyy/MM/dd") + "]]></collectionDateTime>\r\n" +
             "		<sender>\r\n" +
             "			<name><![CDATA[----------]]></name>\r\n" +
             "			<addressLine1><![CDATA[----------]]></addressLine1>\r\n" +
@@ -178,14 +178,14 @@
 
         public override string FakeSuccessfullRequest()
         {
-            return "<?xml version=\"1.0\" encoding=\"UTF - 8\"?>\r\n" +
+            return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n" +
             "<labelRequest>\r\n" +
             "	<consignment key=\"CON1\">\r\n" +
             "		<consignmentIdentity>\r\n" +
             "			<consignmentNumber><![CDATA[123456785]]></consignmentNumber>\r\n" +
             "			<customerReference><![CDATA[CR1234567890CR1234567890]]></customerReference>\r\n" +
             "		</consignmentIdentity>\r\n" +
-            "		<collectionDateTime><![CDATA[" + DateTime.Today.ToString("yyyy/MM/dd") + "T14:00:00]]></collectionDateTime>\r\n" +
+            "		<collectionDateTime><![CDATA[" + GetShippingDate.ToString("yyyy/MM/dd") + "T14:00:00]]></collectionDateTime>\r\n" +
             "		<sender>\r\n" +
             "			<name><![CDATA[----------]]></name>\r\n" +
             "			<addressLine1><![CDATA[----------]]></addressLine1>\r\n" +

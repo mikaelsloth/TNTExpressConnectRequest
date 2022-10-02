@@ -1,9 +1,7 @@
 ﻿namespace TNTExpressConnectRequest.Tests
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
-    using System.Xml.Linq;
 
     public class ExpressConnectShippingTestRequests : ExpressConnectTestRequests
     {
@@ -14,8 +12,12 @@
         public static IEnumerable<object[]> GetFailingRequests()
         {
             yield return new object[] { nameof(FakeDataValidationErrorRequest) };
-            yield return new object[] { nameof(FakeInvalidCredentialsRequest) };
             yield return new object[] { nameof(FakeInvalidFormatRequest) };
+        }
+
+        public static IEnumerable<object[]> GetInvalidCredentialsRequest()
+        {
+            yield return new object[] { nameof(FakeInvalidCredentialsRequest) };
         }
 
         public override string FakeSuccessfullRequest()
@@ -45,7 +47,7 @@
             "			<CONTACTTELEPHONE><![CDATA[717733]]></CONTACTTELEPHONE>\r\n" +
             "			<CONTACTEMAIL><![CDATA[contact@tnt.com]]></CONTACTEMAIL>\r\n" +
             "			<COLLECTION>\r\n" +
-            "				<SHIPDATE><![CDATA[" + DateTime.Today.ToString("dd/MM/yyyy").Replace('-', '/') + "]]></SHIPDATE>\r\n" +
+            "				<SHIPDATE><![CDATA[" + GetShippingDate.ToString("dd/MM/yyyy").Replace('-', '/') + "]]></SHIPDATE>\r\n" +
             "				<PREFCOLLECTTIME>\r\n" +
             "					<FROM><![CDATA[09:00]]></FROM>\r\n" +
             "					<TO><![CDATA[16:00]]></TO>\r\n" +
@@ -79,8 +81,6 @@
             "				<TOTALVOLUME><![CDATA[0.027]]></TOTALVOLUME>\r\n" +
             "				<CURRENCY><![CDATA[EUR]]></CURRENCY>\r\n" +
             "				<GOODSVALUE><![CDATA[180.00]]></GOODSVALUE>\r\n" +
-            "				<INSURANCEVALUE><![CDATA[]]></INSURANCEVALUE>\r\n" +
-            "				<INSURANCECURRENCY><![CDATA[]]></INSURANCECURRENCY>\r\n" +
             "				<DIVISION><![CDATA[G]]></DIVISION>\r\n" +
             "				<SERVICE><![CDATA[15N]]></SERVICE>\r\n" +
             "				<OPTION><![CDATA[]]></OPTION>\r\n" +
@@ -165,7 +165,7 @@
             "			<CONTACTTELEPHONE><![CDATA[717733]]></CONTACTTELEPHONE>\r\n" +
             "			<CONTACTEMAIL><![CDATA[contact@tnt.com]]></CONTACTEMAIL>\r\n" +
             "			<COLLECTION>\r\n" +
-            "				<SHIPDATE><![CDATA[" + DateTime.Today.ToString("dd/MM/yyyy").Replace('-', '/') + "]]></SHIPDATE>\r\n" +
+            "				<SHIPDATE><![CDATA[" + GetShippingDate.ToString("dd/MM/yyyy").Replace('-', '/') + "]]></SHIPDATE>\r\n" +
             "				<PREFCOLLECTTIME>\r\n" +
             "					<FROM><![CDATA[09:00]]></FROM>\r\n" +
             "					<TO><![CDATA[16:00]]></TO>\r\n" +
@@ -199,8 +199,6 @@
             "				<TOTALVOLUME><![CDATA[0.027]]></TOTALVOLUME>\r\n" +
             "				<CURRENCY><![CDATA[EUR]]></CURRENCY>\r\n" +
             "				<GOODSVALUE><![CDATA[180.00]]></GOODSVALUE>\r\n" +
-            "				<INSURANCEVALUE><![CDATA[]]></INSURANCEVALUE>\r\n" +
-            "				<INSURANCECURRENCY><![CDATA[]]></INSURANCECURRENCY>\r\n" +
             "				<DIVISION><![CDATA[G]]></DIVISION>\r\n" +
             "				<SERVICE><![CDATA[15N]]></SERVICE>\r\n" +
             "				<OPTION><![CDATA[]]></OPTION>\r\n" +
@@ -285,7 +283,7 @@
             "			<CONTACTTELEPHONE><![CDATA[717733]]></CONTACTTELEPHONE>\r\n" +
             "			<CONTACTEMAIL><![CDATA[contact@tnt.com]]></CONTACTEMAIL>\r\n" +
             "			<COLLECTION>\r\n" +
-            "				<SHIPDATE><![CDATA[" + DateTime.Today.ToString("dd/MM/yyyy").Replace('-', '/') + "]]></SHIPDATE>\r\n" +
+            "				<SHIPDATE><![CDATA[" + GetShippingDate.ToString("dd/MM/yyyy").Replace('-', '/') + "]]></SHIPDATE>\r\n" +
             "				<PREFCOLLECTTIME>\r\n" +
             "					<FROM><![CDATA[09:00]]></FROM>\r\n" +
             "					<TO><![CDATA[16:00]]></TO>\r\n" +
@@ -319,8 +317,6 @@
             "				<TOTALVOLUME><![CDATA[0.027]]></TOTALVOLUME>\r\n" +
             "				<CURRENCY><![CDATA[EUR]]></CURRENCY>\r\n" +
             "				<GOODSVALUE><![CDATA[180.00]]></GOODSVALUE>\r\n" +
-            "				<INSURANCEVALUE><![CDATA[]]></INSURANCEVALUE>\r\n" +
-            "				<INSURANCECURRENCY><![CDATA[]]></INSURANCECURRENCY>\r\n" +
             "				<DIVISION><![CDATA[G]]></DIVISION>\r\n" +
             "				<SERVICE><![CDATA[15N]]></SERVICE>\r\n" +
             "				<OPTION><![CDATA[]]></OPTION>\r\n" +
@@ -405,7 +401,7 @@
             "			<CONTACTTELEPHONE><![CDATA[717733]]></CONTACTTELEPHONE>\r\n" +
             "			<CONTACTEMAIL><![CDATA[contact@tnt.com]]></CONTACTEMAIL>\r\n" +
             "			<COLLECTION>\r\n" +
-            "				<SHIPDATE><![CDATA[" + DateTime.Today.ToString("dd/MM/yyyy").Replace('-', '/').Replace('-', '/') + "]]></SHIPDATE>\r\n" +
+            "				<SHIPDATE><![CDATA[" + GetShippingDate.ToString("dd/MM/yyyy").Replace('-', '/').Replace('-', '/') + "]]></SHIPDATE>\r\n" +
             "				<PREFCOLLECTTIME>\r\n" +
             "					<FROM><![CDATA[09:00]]></FROM>\r\n" +
             "					<TO><![CDATA[16:00]]></TO>\r\n" +
@@ -439,8 +435,6 @@
             "				<TOTALVOLUME><![CDATA[0.027]]></TOTALVOLUME>\r\n" +
             "				<CURRENCY><![CDATA[EUR]]></CURRENCY>\r\n" +
             "				<GOODSVALUE><![CDATA[180.00]]></GOODSVALUE>\r\n" +
-            "				<INSURANCEVALUE><![CDATA[]]></INSURANCEVALUE>\r\n" +
-            "				<INSURANCECURRENCY><![CDATA[]]></INSURANCECURRENCY>\r\n" +
             "				<DIVISION><![CDATA[G]]></DIVISION>\r\n" +
             "				<OPTION><![CDATA[]]></OPTION>\r\n" +
             "				<DESCRIPTION><![CDATA[assorted office accessories]]></DESCRIPTION>\r\n" +

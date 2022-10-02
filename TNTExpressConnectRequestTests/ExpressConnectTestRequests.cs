@@ -1,5 +1,6 @@
 ﻿namespace TNTExpressConnectRequest.Tests
 {
+    using System;
     using System.Collections;
     using System.Collections.Generic;
     using System.Xml.Linq;
@@ -21,6 +22,20 @@
         }
 
         internal ExpressConnectCredentials Credentials { get; }
+
+        internal static DateTime GetShippingDate
+        {
+            get
+            {
+                DateTime date = DateTime.Now;
+                while (date.DayOfWeek is DayOfWeek.Saturday or DayOfWeek.Sunday)
+                {
+                    _ = date.AddDays(1);
+                }
+
+                return date;
+            }
+        }
 
         public static XDocument ConvertStringToXDocument(string requestXmlAsString)
         {

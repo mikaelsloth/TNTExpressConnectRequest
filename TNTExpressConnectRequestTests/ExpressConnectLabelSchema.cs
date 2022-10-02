@@ -1,18 +1,19 @@
 ﻿namespace TNTExpressConnectRequest.Tests
 {
-    using System;
-
-    internal class ExpressConnectLabelSchema : ExpressConnectSchema
+    internal sealed class ExpressConnectLabelSchema : ExpressConnectSchema
     {
-        private static readonly string[] schemafiles = new string[] { "LabelCommonDefinitions.xsd", "LabelRequest.xsd" };
+        private static readonly string[] schemafiles = new string[] { "LabelRequest.xsd" };
+
+        // Explicit static constructor to tell C# compiler
+        // not to mark type as beforefieldinit
+        static ExpressConnectLabelSchema()
+        {
+        }
 
         private ExpressConnectLabelSchema() : base(schemafiles)
         {
         }
 
-        private static readonly Lazy<ExpressConnectLabelSchema> lazy = new(() => new ExpressConnectLabelSchema());
-
-        public static ExpressConnectLabelSchema Instance = lazy.Value;
-
+        public static ExpressConnectLabelSchema Instance { get; } = new();
     }
 }

@@ -144,7 +144,7 @@
             {
                 inputxml = XDocument.Parse(requestXmlAsString, LoadOptions.PreserveWhitespace | LoadOptions.SetLineInfo);
                 return !TryValidateSchema(inputxml, schemaSet, out string message)
-                    ? throw new ArgumentException($"The request is not confirming to the supplied schema. \r\nThe error returned was : \r\n{message}\r\nPlease ensure you copy a valid request.")
+                    ? throw new ArgumentException($"The request is not confirming to the supplied schema. \r\nThe error returned was : \r\n{message}\r\nPlease ensure you use a valid request.")
                     : SubmitRequestImpl(requestXmlAsString);
             }
             catch (ArgumentException)
@@ -164,26 +164,34 @@
         /// <param name="schemas">The <see cref="XmlSchemaSet"/> to validate against</param>
         /// <param name="message">An <see langword="out"/> parameter containing any messages returned from the validation</param>
         /// <returns><see langword="true"/> if validate is successful, otherwise <see langword="false"/></returns>
-        protected bool TryValidateSchema(XDocument inputxml, XmlSchemaSet schemas, out string message)
+        private static bool TryValidateSchema(XDocument inputxml, XmlSchemaSet schemas, out string message)
         {
             bool errors = false;
-            string tempmsg = string.Empty;
+            string result = string.Empty;
 
-            inputxml.Validate(schemas, (o, e) =>
+            try
             {
-                errors = true;
-                tempmsg = "The following messages came from validating against the schema: \r\nError in line " + e.Exception.LineNumber + " : " + e.Exception.Message + "\r\n";
-                string details = e.Severity switch
+                inputxml.Validate(schemas, (o, e) =>
                 {
-                    XmlSeverityType.Error => "ERROR: " + e.Message,
-                    XmlSeverityType.Warning => "WARNING: " + e.Message,
-                    _ => string.Empty,
-                };
-                tempmsg += details;
-            });
+                    result += "The following messages came from validating against the schema: \r\nError in line " + e.Exception.LineNumber + ", position " + e.Exception.LinePosition + " : " + e.Exception.Message + "\r\n";
+                    result += e.Severity switch
+                    {
+                        XmlSeverityType.Error => "ERROR: " + e.Message,
+                        XmlSeverityType.Warning => "WARNING: " + e.Message,
+                        _ => string.Empty
+                    };
 
-            message = tempmsg;
-            return errors;
+                    errors = true;
+                    result += "Error mesage : " + e.Exception.Message + "\r\n";
+                });
+            }
+            catch (Exception e)
+            {
+                result += "An exception of type " + e.GetType() + " was thrown, with the following message :\r\n" + e.Message + "\r\n";
+            }
+
+            message = result;
+            return !errors;
         }
 
         /// <summary>
