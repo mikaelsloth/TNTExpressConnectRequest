@@ -3,6 +3,8 @@
     using RestSharp;
     using RestSharp.Authenticators;
     using System;
+    using System.Net.Http;
+    using System.Security.Cryptography.X509Certificates;
     using System.Threading.Tasks;
     using System.Xml.Linq;
     using System.Xml.Schema;
@@ -17,7 +19,7 @@
         /// <summary>
         /// Get or set the login name to be used for the request
         /// </summary>
-        public virtual string CustomerId
+        public virtual string? CustomerId
         {
             get;
             set;
@@ -26,7 +28,7 @@
         /// <summary>
         /// Set the password to be used for the request
         /// </summary>
-        public virtual string Password
+        public virtual string? Password
         {
             protected get;
             set;
@@ -86,7 +88,7 @@
         public virtual async Task<XDocument> SubmitRequestAsync(XDocument requestXml, XmlSchemaSet schemaSet) =>
             // If schema not valid inform user
             !TryValidateSchema(requestXml, schemaSet, out string message)
-                ? throw new ArgumentException($"The request text to render is not confirming to the supplied schema. \r\nThe error returned was : \r\n{message}\r\nPlease ensure you use a valid request.")
+                ? throw new ArgumentException($"The request is not confirming to the supplied schema. \r\nThe error returned was : \r\n{message}\r\nPlease ensure you use a valid request.")
                 : await SubmitRequestAsyncImpl(requestXml.ToString());
 
         /// <summary>
@@ -103,7 +105,7 @@
             {
                 inputxml = XDocument.Parse(requestXmlAsString, LoadOptions.PreserveWhitespace | LoadOptions.SetLineInfo);
                 return !TryValidateSchema(inputxml, schemaSet, out string message)
-                    ? throw new ArgumentException($"The request text to render is not confirming to the supplied schema. \r\nThe error returned was : \r\n{message}\r\nPlease ensure you use a valid request.")
+                    ? throw new ArgumentException($"The request is not confirming to the supplied schema. \r\nThe error returned was : \r\n{message}\r\nPlease ensure you use a valid request.")
                     : await SubmitRequestAsyncImpl(requestXmlAsString);
             }
             catch (ArgumentException)
@@ -112,7 +114,7 @@
             }
             catch (Exception ex)
             {
-                throw new ArgumentException($"The request text to render is invalid. \r\nThe error returned was : \r\n{ex.Message}\r\nPlease correct the errors and try again.", nameof(requestXmlAsString), ex);
+                throw new ArgumentException($"The request is invalid. \r\nThe error returned was : \r\n{ex.Message}\r\nPlease correct the errors and try again.", nameof(requestXmlAsString), ex);
             }
         }
 
@@ -125,7 +127,7 @@
         public virtual XDocument SubmitRequest(XDocument requestXml, XmlSchemaSet schemaSet) =>
             // If schema not valid inform user
             !TryValidateSchema(requestXml, schemaSet, out string message)
-                ? throw new ArgumentException($"The request text to render is not confirming to the supplied schema. \r\nThe error returned was : \r\n{message}\r\nPlease ensure you use a valid request.")
+                ? throw new ArgumentException($"The request is not confirming to the supplied schema. \r\nThe error returned was : \r\n{message}\r\nPlease ensure you use a valid request.")
                 : SubmitRequestImpl(requestXml.ToString());
 
         /// <summary>
@@ -142,7 +144,7 @@
             {
                 inputxml = XDocument.Parse(requestXmlAsString, LoadOptions.PreserveWhitespace | LoadOptions.SetLineInfo);
                 return !TryValidateSchema(inputxml, schemaSet, out string message)
-                    ? throw new ArgumentException($"The label request text to render is not confirming to the ExpressLabel schema. \r\nThe error returned was : \r\n{message}\r\nPlease ensure you copy a valid ExpressLabel request.")
+                    ? throw new ArgumentException($"The request is not confirming to the supplied schema. \r\nThe error returned was : \r\n{message}\r\nPlease ensure you use a valid request.")
                     : SubmitRequestImpl(requestXmlAsString);
             }
             catch (ArgumentException)
@@ -151,7 +153,7 @@
             }
             catch (Exception ex)
             {
-                throw new ArgumentException($"The request text to render is invalid. \r\nThe error returned was : \r\n{ex.Message}\r\nPlease correct the errors and try again.", nameof(requestXmlAsString), ex);
+                throw new ArgumentException($"The request is invalid. \r\nThe error returned was : \r\n{ex.Message}\r\nPlease correct the errors and try again.", nameof(requestXmlAsString), ex);
             }
         }
 
@@ -162,28 +164,34 @@
         /// <param name="schemas">The <see cref="XmlSchemaSet"/> to validate against</param>
         /// <param name="message">An <see langword="out"/> parameter containing any messages returned from the validation</param>
         /// <returns><see langword="true"/> if validate is successful, otherwise <see langword="false"/></returns>
-        protected static bool TryValidateSchema(XDocument inputxml, XmlSchemaSet schemas, out string message)
+        private static bool TryValidateSchema(XDocument inputxml, XmlSchemaSet schemas, out string message)
         {
             bool errors = false;
-            string tempmsg = string.Empty;
+            string result = string.Empty;
 
-            inputxml.Validate(schemas, (o, e) =>
+            try
             {
-                errors = true;
-                tempmsg = "The following messages came from validating against the schema: \r\n";
-                switch (e.Severity)
+                inputxml.Validate(schemas, (o, e) =>
                 {
-                    case XmlSeverityType.Error:
-                        tempmsg = tempmsg + "\r\n" + "ERROR: " + e.Message;
-                        break;
-                    case XmlSeverityType.Warning:
-                        tempmsg = tempmsg + "\r\n" + "WARNING: " + e.Message;
-                        break;
-                }
-            });
+                    result += "The following messages came from validating against the schema: \r\nError in line " + e.Exception.LineNumber + ", position " + e.Exception.LinePosition + " : " + e.Exception.Message + "\r\n";
+                    result += e.Severity switch
+                    {
+                        XmlSeverityType.Error => "ERROR: " + e.Message,
+                        XmlSeverityType.Warning => "WARNING: " + e.Message,
+                        _ => string.Empty
+                    };
 
-            message = tempmsg;
-            return errors;
+                    errors = true;
+                    result += "Error mesage : " + e.Exception.Message + "\r\n";
+                });
+            }
+            catch (Exception e)
+            {
+                result += "An exception of type " + e.GetType() + " was thrown, with the following message :\r\n" + e.Message + "\r\n";
+            }
+
+            message = result;
+            return !errors;
         }
 
         /// <summary>
@@ -199,6 +207,8 @@
                 RestRequest request = SetupConnectionParameters(requestXmlAsString, client);
 
                 RestResponse response = await client.PostAsync(request);
+                ValidateHttpError(response);
+
                 return ParseToXDoc(response);
             }
             catch
@@ -214,6 +224,7 @@
         /// <returns>An <see cref="XDocument"/> containing the reponse</returns>
         protected virtual XDocument ParseToXDoc(RestResponse response)
         {
+            ArgumentNullException.ThrowIfNull(response.Content);
             string value = response.Content;
             try
             {
@@ -222,7 +233,7 @@
             }
             catch (Exception ex)
             {
-                throw new Exception($"The response text to render is invalid. \r\nThe error returned was : \r\n{ex.Message}\r\nPlease correct the errors and try again.", ex);
+                throw new Exception($"The response is invalid. \r\nThe error returned was : \r\n{ex.Message}\r\nPlease correct the errors and try again.", ex);
             }
         }
 
@@ -234,6 +245,10 @@
         /// <returns>A <see cref="RestRequest"/> object</returns>
         protected virtual RestRequest SetupConnectionParameters(string requestXmlAsString, RestClient client)
         {
+            // Implement throw on null when going to .NET6
+            ArgumentNullException.ThrowIfNull(CustomerId);
+            ArgumentNullException.ThrowIfNull(Password);
+
             RestRequest request = new() { Resource = URL };
             _ = request.AddHeader("Content-Type", ContentType);
             _ = request.AddHeader("Accept", "*/*");
@@ -256,12 +271,22 @@
                 RestRequest request = SetupConnectionParameters(requestXmlAsString, client);
 
                 RestResponse response = client.Post(request);
+                ValidateHttpError(response);
+
                 return ParseToXDoc(response);
             }
             catch
             {
                 throw;
             }
+        }
+
+        private static void ValidateHttpError(RestResponse response)
+        {
+            if (response.ResponseStatus != ResponseStatus.Completed || response.StatusCode == System.Net.HttpStatusCode.InternalServerError)
+                throw new HttpRequestException("The request was not successful either due to network issues or server issues", null, response.StatusCode);
+            if (response.StatusCode == System.Net.HttpStatusCode.NotAcceptable)
+                throw new HttpRequestException("The request is invalid formatted", null, response.StatusCode);
         }
     }
 }

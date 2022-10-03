@@ -89,11 +89,16 @@
         /// <inheritdoc cref="ExpressConnectRequest.ParseToXDoc(RestResponse)(string, RestClient)"/>
         protected override XDocument ParseToXDoc(RestResponse response)
         {
+            ArgumentNullException.ThrowIfNull(response.Content);
             string value = response.Content;
-            if (!value.Contains("COMPLETE")) throw new Exception("The shipping endpoint must return a COMPLETE message containing an access key");
+            return !value.Contains("COMPLETE") ? base.ParseToXDoc(response) : CreateAccessKeyDocument(value);
+        }
+
+        private static XDocument CreateAccessKeyDocument(string value)
+        {
             string accesskey = value[9..];
 
-            XDocument document = new (
+            XDocument document = new(
                       new XDeclaration("1.0", "utf-8", "yes"),
                       new XElement("AccessKey", accesskey));
             return document;
