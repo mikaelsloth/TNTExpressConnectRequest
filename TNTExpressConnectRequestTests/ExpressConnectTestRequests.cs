@@ -30,7 +30,7 @@
                 DateTime date = DateTime.Now;
                 while (date.DayOfWeek is DayOfWeek.Saturday or DayOfWeek.Sunday)
                 {
-                    _ = date.AddDays(1);
+                    date = date.AddDays(1);
                 }
 
                 return date;
