@@ -3,7 +3,7 @@
     using System.Xml.Serialization;
 
     [XmlType(TypeName = "PRINT")]
-    public partial class Print
+    public partial class PrintActivity
     {
         [XmlElement(Order = 0)]
         public Required? REQUIRED { get; set; }

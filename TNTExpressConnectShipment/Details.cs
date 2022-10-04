@@ -23,26 +23,32 @@
         [XmlElement(Order = 5)]
         public string? PAYMENTIND { get; set; }
 
-        [XmlElement(DataType = "integer", Order = 6)]
-        public int? ITEMS { get; set; }
+        [XmlElement(Order = 6)]
+        public int ITEMS { get; set; }
 
         [XmlElement(Order = 7)]
-        public decimal? TOTALWEIGHT { get; set; }
+        public decimal TOTALWEIGHT { get; set; }
 
         [XmlElement(Order = 8)]
-        public decimal? TOTALVOLUME { get; set; }
+        public decimal TOTALVOLUME { get; set; }
 
         [XmlElement(Order = 9)]
         public string? CURRENCY { get; set; }
 
         [XmlElement(Order = 10)]
-        public decimal? GOODSVALUE { get; set; }
+        public decimal GOODSVALUE { get; set; }
 
-        [XmlElement(Order = 11)]
-        public decimal? INSURANCEVALUE { get; set; }
+        [XmlElement(Order = 11, IsNullable = false)]
+        public decimal INSURANCEVALUE { get; set; }
+
+        [XmlIgnore]
+        public bool INSURANCEVALUESpecified => INSURANCEVALUE > 0;
 
         [XmlElement(Order = 12)]
         public string? INSURANCECURRENCY { get; set; }
+
+        [XmlIgnore]
+        public bool INSURANCECURRENCYSpecified => INSURANCEVALUE > 0;
 
         [XmlElement(Order = 13)]
         public string? DIVISION { get; set; }
@@ -59,11 +65,14 @@
         [XmlElement(Order = 17)]
         public string? DELIVERYINST { get; set; }
 
-        [XmlElement(Order = 18)]
-        public bool? CUSTOMCONTROLIN { get; set; }
+        [XmlElement(Order = 18, IsNullable = false)]
+        public bool CUSTOMCONTROLIN { get; set; }
 
-        [XmlElement(Order = 19)]
-        public bool? HAZARDOUS { get; set; }
+        [XmlIgnore]
+        public bool CUSTOMCONTROLINSpecified => CUSTOMCONTROLIN != false;
+
+        [XmlElement(Order = 19, IsNullable = false)]
+        public bool HAZARDOUS { get; set; }
 
         [XmlElement(Order = 20)]
         public string? UNNUMBER { get; set; }

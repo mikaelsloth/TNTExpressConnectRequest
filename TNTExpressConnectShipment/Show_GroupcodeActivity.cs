@@ -3,7 +3,7 @@
     using System.Xml.Serialization;
 
     [XmlType(TypeName = "SHOW_GROUPCODE")]
-    public partial class Show_Groupcode
+    public partial class Show_GroupcodeActivity
     {
     }
 }

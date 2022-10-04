@@ -2,7 +2,7 @@
 {
     using System.Xml.Serialization;
 
-    public class ActivityStandard : Activity
+    public class ActivityStandard : ActivityBase
     {
         [XmlElement("CONNUMBER", Order = 1)]
         public string[]? CONNUMBER { get; set; }

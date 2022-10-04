@@ -18,9 +18,9 @@
         public ShipActivity? SHIP { get; set; }
 
         [XmlElement(Order = 4)]
-        public Print? PRINT { get; set; }
+        public PrintActivity? PRINT { get; set; }
 
         [XmlElement(Order = 5)]
-        public Show_Groupcode? SHOW_GROUPCODE { get; set; }
+        public Show_GroupcodeActivity? SHOW_GROUPCODE { get; set; }
     }
 }

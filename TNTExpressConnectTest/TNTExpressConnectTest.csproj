@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\TNTExpressConnectRequestTests\TNTExpressConnectRequestTests.csproj" />
+    <ProjectReference Include="..\TNTExpressConnectShipment\TNTExpressConnectShipment.csproj" />
   </ItemGroup>
 
 </Project>
