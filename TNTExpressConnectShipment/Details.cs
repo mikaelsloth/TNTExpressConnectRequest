@@ -1,0 +1,77 @@
+﻿namespace TNTExpressConnectShipment
+{
+    using System.Xml.Serialization;
+
+    [XmlType(TypeName = "DETAILS")]
+    public partial class Details 
+    {
+        [XmlElement(Order = 0)]
+        public ReceiverAddress? RECEIVER { get; set; }
+
+        [XmlElement(Order = 1)]
+        public DeliveryAddress? DELIVERY { get; set; }
+
+        [XmlElement(Order = 2)]
+        public string? CONNUMBER { get; set; }
+
+        [XmlElement(Order = 3)]
+        public string? CUSTOMERREF { get; set; }
+
+        [XmlElement(Order = 4)]
+        public string? CONTYPE { get; set; }
+
+        [XmlElement(Order = 5)]
+        public string? PAYMENTIND { get; set; }
+
+        [XmlElement(DataType = "integer", Order = 6)]
+        public int? ITEMS { get; set; }
+
+        [XmlElement(Order = 7)]
+        public decimal? TOTALWEIGHT { get; set; }
+
+        [XmlElement(Order = 8)]
+        public decimal? TOTALVOLUME { get; set; }
+
+        [XmlElement(Order = 9)]
+        public string? CURRENCY { get; set; }
+
+        [XmlElement(Order = 10)]
+        public decimal? GOODSVALUE { get; set; }
+
+        [XmlElement(Order = 11)]
+        public decimal? INSURANCEVALUE { get; set; }
+
+        [XmlElement(Order = 12)]
+        public string? INSURANCECURRENCY { get; set; }
+
+        [XmlElement(Order = 13)]
+        public string? DIVISION { get; set; }
+
+        [XmlElement(Order = 14)]
+        public string? SERVICE { get; set; }
+
+        [XmlElement("OPTION", Order = 15)]
+        public string[]? OPTION { get; set; }
+
+        [XmlElement(Order = 16)]
+        public string? DESCRIPTION { get; set; }
+
+        [XmlElement(Order = 17)]
+        public string? DELIVERYINST { get; set; }
+
+        [XmlElement(Order = 18)]
+        public bool? CUSTOMCONTROLIN { get; set; }
+
+        [XmlElement(Order = 19)]
+        public bool? HAZARDOUS { get; set; }
+
+        [XmlElement(Order = 20)]
+        public string? UNNUMBER { get; set; }
+
+        [XmlElement(Order = 21)]
+        public string? PACKINGGROUP { get; set; }
+
+        [XmlElement("PACKAGE", Order = 22)]
+        public Package[]? PACKAGE { get; set; }
+    }
+}
