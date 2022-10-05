@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TNTExpressConnectRequestTes
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TNTExpressConnectTest", "TNTExpressConnectTest\TNTExpressConnectTest.csproj", "{3DD4D875-2E1B-42CD-A799-7B7803F49708}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TNTExpressConnectShipment", "TNTExpressConnectShipment\TNTExpressConnectShipment.csproj", "{DAE01558-C991-4C5D-8A76-08FB221DF742}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TNTExpressConnectShipment", "TNTExpressConnectShipment\TNTExpressConnectShipment.csproj", "{DAE01558-C991-4C5D-8A76-08FB221DF742}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TNTExpressConnectShipmentTests", "TNTExpressConnectShipmentTests\TNTExpressConnectShipmentTests.csproj", "{C3A9FD14-D193-4F1D-8B31-6D3219C5DE25}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{DAE01558-C991-4C5D-8A76-08FB221DF742}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DAE01558-C991-4C5D-8A76-08FB221DF742}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DAE01558-C991-4C5D-8A76-08FB221DF742}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C3A9FD14-D193-4F1D-8B31-6D3219C5DE25}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C3A9FD14-D193-4F1D-8B31-6D3219C5DE25}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C3A9FD14-D193-4F1D-8B31-6D3219C5DE25}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C3A9FD14-D193-4F1D-8B31-6D3219C5DE25}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
